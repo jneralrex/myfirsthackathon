@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"; // To access route parameters
-import axios from "axios";
+
 import DashboardLayout from "../Layout/DashboardLayout";
 import farm from "../../assets/images/pexels-photo-259280.jpeg";
 import farmer from "../../assets/images/pexels-photo-916406.jpeg";
+import axios from "axios";
 
 const SingleFarmer = () => {
   const { id } = useParams(); // Get the encoded ID from the URL
@@ -12,6 +13,7 @@ const SingleFarmer = () => {
 
   const [farmerData, setFarmerData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [loadingAcc, setLoadingAcc] = useState(false);
   const [error, setError] = useState("");
   const [status, setStatus] = useState("");
   const [formData, setFormData] = useState({
@@ -26,16 +28,21 @@ const SingleFarmer = () => {
     organicMatter: "",
     cn: "",
     texture: "",
-    source: ""
+    source: "",
   });
   const fetchFarmerData = async () => {
     try {
-      const storedUser = JSON.parse(localStorage.getItem('SOIL_TESTER') || '{}');
-      const response = await axios.get(`${base_url}/agent/test-request/${decodedId}`,  {
-        headers: {
-          "Authorization": `Bearer ${storedUser.token}`,
-        },
-      });
+      const storedUser = JSON.parse(
+        localStorage.getItem("SOIL_TESTER") || "{}"
+      );
+      const response = await axios.get(
+        `${base_url}/agent/test-request/${decodedId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${storedUser.token}`,
+          },
+        }
+      );
       setFarmerData(response.data.data);
     } catch (err) {
       console.error("Error fetching farmer data:", err.response || err);
@@ -45,8 +52,6 @@ const SingleFarmer = () => {
     }
   };
   useEffect(() => {
-   
-
     fetchFarmerData();
   }, [decodedId]);
 
@@ -54,23 +59,58 @@ const SingleFarmer = () => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value
+      [name]: value,
     }));
-  };
-console.log(decodedId)
-  const handleUpdateStatus= async (e) => {
+  }; 
+
+
+  console.log(decodedId);
+  const handleUpdateStatus = async (e) => {
     const { name, value } = e.target;
-    setStatus(value)
+    setStatus(value);
     try {
-    const storedUser = JSON.parse(localStorage.getItem('SOIL_TESTER') || '{}');
-    const res = await axios.patch(`${base_url}/agent/request/${decodedId}/${value}`, formData, {
-       headers: {
-         "Authorization": `Bearer ${storedUser.token}`,
-       },
-     });
-     fetchFarmerData()
-     console.log('result', res.data.data)
+      const storedUser = JSON.parse(
+        localStorage.getItem("SOIL_TESTER") || "{}"
+      );
+      const res = await axios.patch(
+        `${base_url}/agent/request/${decodedId}/${value}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${storedUser.token}`,
+          },
+        }
+      );
+      fetchFarmerData();
+      console.log("result", res.data.data);
     } catch (err) {
+      console.error("Error submitting result:", err.response || err);
+      //setError("Failed to submit result.");
+    }
+  };
+
+  const acceptRequest = async () => {
+    setLoadingAcc(true)
+    try {
+      const storedUser = JSON.parse(
+        localStorage.getItem("SOIL_TESTER") || "{}"
+      );
+      const res = await axios.patch(
+        `${base_url}/agent/request/${decodedId}/assigned`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${storedUser.token}`,
+          },
+        }
+      );
+      console.log("result", res.data.data);
+
+      fetchFarmerData();
+      alert("Request Accepted")
+      
+    } catch (err) {
+      setLoadingAcc(false)
       console.error("Error submitting result:", err.response || err);
       //setError("Failed to submit result.");
     }
@@ -79,16 +119,22 @@ console.log(decodedId)
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log(formData,decodedId );
-      
-      const storedUser = JSON.parse(localStorage.getItem('SOIL_TESTER') || '{}');
-     const res = await axios.post(`${base_url}/agent/request/${decodedId}/result`, formData, {
-        headers: {
-          "Authorization": `Bearer ${storedUser.token}`,
-        },
-      });
-      console.log('result', res)
-     // alert("Result submitted successfully!");
+      console.log(formData, decodedId);
+
+      const storedUser = JSON.parse(
+        localStorage.getItem("SOIL_TESTER") || "{}"
+      );
+      const res = await axios.post(
+        `${base_url}/agent/request/${decodedId}/result`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${storedUser.token}`,
+          },
+        }
+      );
+      console.log("result", res);
+      // alert("Result submitted successfully!");
     } catch (err) {
       console.error("Error submitting result:", err.response || err);
       //setError("Failed to submit result.");
@@ -102,7 +148,7 @@ console.log(decodedId)
   if (error) {
     return <p className="text-red-500">{error}</p>;
   }
-console.log("Data", formData);
+  console.log("Data", formData);
 
   return (
     <DashboardLayout>
@@ -123,16 +169,23 @@ console.log("Data", formData);
             />
           </div>
           <h2 className="text-2xl font-semibold mt-3">
-            {farmerData?.farmer?.profile?.firstName} {farmerData?.farmer?.profile?.lastName} {farmerData?.farmer?.profile?.middleName}
+            {farmerData?.farmer?.profile?.firstName}{" "}
+            {farmerData?.farmer?.profile?.lastName}{" "}
+            {farmerData?.farmer?.profile?.middleName}
           </h2>
-          <p className="text-gray-500">Location: {farmerData?.land?.location?.address}</p>
+          <p className="text-gray-500">
+            Location: {farmerData?.land?.location?.address}
+          </p>
         </div>
 
         {/* Farmer Details */}
         <div className="mt-6 space-y-4 text-gray-700">
           <div className="flex justify-between items-center">
             <p>
-              <strong>Land Size: {farmerData?.land?.totalArea?.value} {farmerData?.land?.totalArea?.unit}</strong>
+              <strong>
+                Land Size: {farmerData?.land?.totalArea?.value}{" "}
+                {farmerData?.land?.totalArea?.unit}
+              </strong>
             </p>
             <p>
               <strong>Status:</strong>{" "}
@@ -145,8 +198,12 @@ console.log("Data", formData);
             <p>
               <strong>Coordinates:</strong>
             </p>
-            <p>Latitude: {farmerData?.land?.location?.coordinates?.latitude}°</p>
-            <p>Longitude: {farmerData?.land?.location?.coordinates?.longitude}°</p>
+            <p>
+              Latitude: {farmerData?.land?.location?.coordinates?.latitude}°
+            </p>
+            <p>
+              Longitude: {farmerData?.land?.location?.coordinates?.longitude}°
+            </p>
           </div>
           <div className="flex items-center justify-between">
             <div>
@@ -155,85 +212,187 @@ console.log("Data", formData);
               </p>
               <p>{farmerData?.additionalNotes}</p>
             </div>
-            <select
-              className="border border-gray-300 rounded-md px-3 py-2 text-sm h-10"
-             onChange={handleUpdateStatus}>
-              <option value="" disabled>
-                Update Status
-              </option>
-              <option value="pending">Pending</option>
-              <option value="assigned">Assigned</option>
-              <option value="in-progress">In-Progress</option>
-              <option value="completed">Completed</option>
-              <option value="cancelled">Cancelled</option>
-              
 
-            </select>
+            {farmerData?.status == "pending" ? (
+              <button
+                onClick={acceptRequest}
+                className="bg-green-400 text-white p-1 rounded-md"
+              >
+                {loadingAcc? "Processing....":"Accept Request"}
+              </button>
+            ) : (
+              <select
+                className="border border-gray-300 rounded-md px-3 py-2 text-sm h-10"
+                onChange={handleUpdateStatus}
+              >
+                <option value="" disabled>
+                  Update Status
+                </option>
+ 
+                <option value="in-progress">In-Progress</option>
+                <option value="completed">Completed</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            )}
           </div>
         </div>
 
+<br />
+<br />
+        <hr />
+        <h2 className="text-2xl font-semibold mt-3">Provide Test Result</h2>
+        <small>Fill the result of the test to its assigned fields below</small>
+    
         {/* Actions Section */}
-        <div className="mt-6 border-t pt-4">
+       {farmerData?.status == "pending" ? <></>: <div className="mt-6 border-t pt-4">
           <div className="flex justify-between gap-20">
             <div>
-              <form className="grid grid-col gap-10 grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3" onSubmit={handleSubmit}>
+              <form
+                className="grid grid-col gap-10 grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3"
+                onSubmit={handleSubmit}
+              >
                 <label>
-                  Nitrogen <br/>
-                  <input type="text" name="nitrogen" value={formData.nitrogen} onChange={handleChange} placeholder="Component result" className="outline-1 border-1 border-green-300 border p-1 rounded-md"/> 
+                  Nitrogen <br />
+                  <input
+                    type="text"
+                    name="nitrogen"
+                    value={formData.nitrogen}
+                    onChange={handleChange}
+                    placeholder="Component result"
+                    className="outline-1 border-1 border-green-300 border p-1 rounded-md"
+                  />
                 </label>
                 <label>
-                  Potassium <br/>
-                  <input type="text" name="potassium" value={formData.potassium} onChange={handleChange} placeholder="Component result" className="outline-1 border-1 border-green-300 border p-1 rounded-md"/> 
+                  Potassium <br />
+                  <input
+                    type="text"
+                    name="potassium"
+                    value={formData.potassium}
+                    onChange={handleChange}
+                    placeholder="Component result"
+                    className="outline-1 border-1 border-green-300 border p-1 rounded-md"
+                  />
                 </label>
                 <label>
-                  Iron <br/>
-                  <input type="text" name="iron" value={formData.iron} onChange={handleChange} placeholder="Component result" className="outline-1 border-1 border-green-300 border p-1 rounded-md"/> 
+                  Iron <br />
+                  <input
+                    type="text"
+                    name="iron"
+                    value={formData.iron}
+                    onChange={handleChange}
+                    placeholder="Component result"
+                    className="outline-1 border-1 border-green-300 border p-1 rounded-md"
+                  />
                 </label>
                 <label>
-                  Manganese <br/>
-                  <input type="text" name="manganese" value={formData.manganese} onChange={handleChange} placeholder="Component result" className="outline-1 border-1 border-green-300 border p-1 rounded-md"/> 
+                  Manganese <br />
+                  <input
+                    type="text"
+                    name="manganese"
+                    value={formData.manganese}
+                    onChange={handleChange}
+                    placeholder="Component result"
+                    className="outline-1 border-1 border-green-300 border p-1 rounded-md"
+                  />
                 </label>
                 <label>
-                  Boron <br/>
-                  <input type="text" name="boron" value={formData.boron} onChange={handleChange} placeholder="Component result" className="outline-1 border-1 border-green-300 border p-1 rounded-md"/> 
+                  Boron <br />
+                  <input
+                    type="text"
+                    name="boron"
+                    value={formData.boron}
+                    onChange={handleChange}
+                    placeholder="Component result"
+                    className="outline-1 border-1 border-green-300 border p-1 rounded-md"
+                  />
                 </label>
                 <label>
-                  Copper <br/>
-                  <input type="text" name="copper" value={formData.copper} onChange={handleChange} placeholder="Component result" className="outline-1 border-1 border-green-300 border p-1 rounded-md"/> 
+                  Copper <br />
+                  <input
+                    type="text"
+                    name="copper"
+                    value={formData.copper}
+                    onChange={handleChange}
+                    placeholder="Component result"
+                    className="outline-1 border-1 border-green-300 border p-1 rounded-md"
+                  />
                 </label>
                 <label>
-                  Zinc <br/>
-                  <input type="text" name="zinc" value={formData.zinc} onChange={handleChange} placeholder="Component result" className="outline-1 border-1 border-green-300 border p-1 rounded-md"/> 
+                  Zinc <br />
+                  <input
+                    type="text"
+                    name="zinc"
+                    value={formData.zinc}
+                    onChange={handleChange}
+                    placeholder="Component result"
+                    className="outline-1 border-1 border-green-300 border p-1 rounded-md"
+                  />
                 </label>
                 <label>
-                  CEC <br/>
-                  <input type="text" name="cec" value={formData.cec} onChange={handleChange} placeholder="Component result" className="outline-1 border-1 border-green-300 border p-1 rounded-md"/> 
+                  CEC <br />
+                  <input
+                    type="text"
+                    name="cec"
+                    value={formData.cec}
+                    onChange={handleChange}
+                    placeholder="Component result"
+                    className="outline-1 border-1 border-green-300 border p-1 rounded-md"
+                  />
                 </label>
                 <label>
-                  Organic Matter <br/>
-                  <input type="text" name="organicMatter" value={formData.organicMatter} onChange={handleChange} placeholder="Component result" className="outline-1 border-1 border-green-300 border p-1 rounded-md"/> 
+                  Organic Matter <br />
+                  <input
+                    type="text"
+                    name="organicMatter"
+                    value={formData.organicMatter}
+                    onChange={handleChange}
+                    placeholder="Component result"
+                    className="outline-1 border-1 border-green-300 border p-1 rounded-md"
+                  />
                 </label>
                 <label>
-                  C/N <br/>
-                  <input type="text" name="cn" value={formData.cn} onChange={handleChange} placeholder="Component result" className="outline-1 border-1 border-green-300 border p-1 rounded-md"/> 
+                  C/N <br />
+                  <input
+                    type="text"
+                    name="cn"
+                    value={formData.cn}
+                    onChange={handleChange}
+                    placeholder="Component result"
+                    className="outline-1 border-1 border-green-300 border p-1 rounded-md"
+                  />
                 </label>
                 <label>
-                  Texture <br/>
-                  <input type="text" name="texture" value={formData.texture} onChange={handleChange} placeholder="soil texture" className="outline-1 border-1 border-green-300 border p-1 rounded-md"/> 
+                  Texture <br />
+                  <input
+                    type="text"
+                    name="texture"
+                    value={formData.texture}
+                    onChange={handleChange}
+                    placeholder="soil texture"
+                    className="outline-1 border-1 border-green-300 border p-1 rounded-md"
+                  />
                 </label>
                 <label>
-                  Source <br/>
-                  <input type="text" name="source" value={formData.source} onChange={handleChange} placeholder="e.g FMAAFS" className="outline-1 border-1 border-green-300 border p-1 rounded-md"/> 
+                  Source <br />
+                  <input
+                    type="text"
+                    name="source"
+                    value={formData.source}
+                    onChange={handleChange}
+                    placeholder="e.g FMAAFS"
+                    className="outline-1 border-1 border-green-300 border p-1 rounded-md"
+                  />
                 </label>
-                <button className="bg-green-400 text-white p-1 rounded-md">Submit result</button>
+                <button className="bg-green-600 text-white p-1 rounded-md">
+                  Submit result
+                </button>
               </form>
             </div>
           </div>
           <p className="text-xs text-gray-500 mt-2">
-  Last updated: {new Date(formData.updatedAt).toLocaleDateString()}
-</p>
-
-        </div>
+            Last updated: {new Date(formData.updatedAt).toLocaleDateString()}
+          </p>
+        </div>}
       </div>
     </DashboardLayout>
   );

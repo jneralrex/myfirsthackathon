@@ -11,7 +11,9 @@ import {
   TestTube,
   Menu,
   User,
-  X
+  X,
+  TestTubesIcon,
+  Grid
 } from 'lucide-react';
 import SidebarItem from './SidebarItem';
 import { useAuthStore } from '../../store/auth-store';
@@ -24,8 +26,8 @@ const Sidebar = () => {
 
   const menuItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
-    { icon: TestTube, label: 'Soil Testers', path: '/soil-testers' },
-    // { icon: BarChart2, label: 'Analytics', path: '/analytics' },
+    { icon: Grid, label: 'Test Pool', path: '/test-pool' },
+    { icon: TestTubesIcon, label: 'My Tests', path: '/my-test' },
     // { icon: Trees, label: 'Fields', path: '/fields' },
     // { icon: Wheat, label: 'Harvesting', path: '/harvesting' },
     // { icon: Cloud, label: 'Weather', path: '/weather' },

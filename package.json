@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
+    "axios": "^1.7.9",
+    "dot-env": "^0.0.1",
     "dotenv": "^16.4.7",
     "lucide-react": "^0.344.0",
     "nanoid": "^5.0.9",

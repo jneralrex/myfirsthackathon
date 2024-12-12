@@ -15,6 +15,7 @@ import ChangePassword from "./components/Auth/ChangwPassword";
 import SingleFarmer from "./components/SoilTester/SingleFarmer";
 import Analytics from "./pages/Analytics";
 import Profile from "./pages/Profile";
+import AssignedList from "./components/SoilTester/AssignedList";
 
 const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -38,10 +39,18 @@ function App() {
           }
         />
         <Route
-          path="/soil-testers"
+          path="/test-pool"
           element={
             <PrivateRoute>
               <SoilTesterList />
+            </PrivateRoute>
+          }
+        />
+          <Route
+          path="/my-test"
+          element={
+            <PrivateRoute>
+              <AssignedList />
             </PrivateRoute>
           }
         />

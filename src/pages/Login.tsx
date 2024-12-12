@@ -8,8 +8,8 @@ const Login = () => {
       title="Welcome back"
       subtitle="Sign in to your account"
       alternativeAction={{
-        text: "Don't have an account?",
-        linkText: "Sign up",
+        text: "",
+        linkText: "",
         href: "/register",
       }}
     >
