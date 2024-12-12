@@ -8,6 +8,11 @@ import { X } from 'lucide-react';
 const soilTesterSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   location: z.string().min(2, 'Location must be at least 2 characters'),
+  landSize: z.string().min(2, 'land size must be in square meters'),
+  locationLongitude: z.string().min(2, 'Please supply your logitude'),
+  locationLatitude: z.string().min(2, 'Please supply your latitude'),
+  description: z.string().min(2, 'Please add your description'),
+  image: z.any().optional(),
 });
 
 type SoilTesterFormData = z.infer<typeof soilTesterSchema>;
@@ -44,7 +49,7 @@ const CreateSoilTester: React.FC<CreateSoilTesterProps> = ({ onClose }) => {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div>
         <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-          Device Name
+          Farmer's Name
         </label>
         <input
           {...register('name')}
@@ -53,6 +58,20 @@ const CreateSoilTester: React.FC<CreateSoilTesterProps> = ({ onClose }) => {
         />
         {errors.name && (
           <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
+        )}
+      </div>
+
+      <div>
+        <label htmlFor="landSize" className="block text-sm font-medium text-gray-700">
+          Farmer's land size
+          </label>
+        <input
+          {...register('landSize')}
+          type="text"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-2 focus:ring-green-500 h-10 py-2 px-2 text-base"
+        />
+        {errors.landSize && (
+          <p className="mt-1 text-sm text-red-600">{errors.landSize.message}</p>
         )}
       </div>
 
@@ -68,6 +87,59 @@ const CreateSoilTester: React.FC<CreateSoilTesterProps> = ({ onClose }) => {
         {errors.location && (
           <p className="mt-1 text-sm text-red-600">{errors.location.message}</p>
         )}
+      </div>
+      
+      <div>
+        <label htmlFor="locationLongitude" className="block text-sm font-medium text-gray-700">
+          Farmer's Longitude
+          </label>
+        <input
+          {...register('locationLongitude')}
+          type="text"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-2 focus:ring-green-500 h-10 py-2 px-2 text-base"
+        />
+        {errors.locationLongitude && (
+          <p className="mt-1 text-sm text-red-600">{errors.locationLongitude.message}</p>
+        )}
+      </div>
+
+      <div>
+        <label htmlFor="locationLatitude" className="block text-sm font-medium text-gray-700">
+          Farmer's Longitude
+          </label>
+        <input
+          {...register('locationLatitude')}
+          type="text"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-2 focus:ring-green-500 h-10 py-2 px-2 text-base"
+        />
+        {errors.locationLatitude && (
+          <p className="mt-1 text-sm text-red-600">{errors.locationLatitude.message}</p>
+        )}
+      </div>
+
+      <div>
+        <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+          Description
+        </label>
+        <input
+          {...register('description')}
+          type="text"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-2 focus:ring-green-500 h-10 py-2 px-2 text-base"
+        />
+        {errors.description && (
+          <p className="mt-1 text-sm text-red-600">{errors.description.message}</p>
+        )}
+      </div>
+
+      <div>
+        <label htmlFor="image" className="block text-sm font-medium text-gray-700">
+          Profile Image
+        </label>
+        <input
+          {...register('image')}
+          type="file"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-2 focus:ring-green-500 h-10 py-2 px-2 text-base"
+        />
       </div>
 
       <div className="flex gap-4 mt-6">

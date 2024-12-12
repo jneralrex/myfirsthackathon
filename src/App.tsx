@@ -1,13 +1,24 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useAuthStore } from './store/auth-store';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Dashboard from './pages/Dashboard';
-import CreateSoilTester from './components/SoilTester/CreateSoilTester';
-import SoilTesterList from './components/SoilTester/SoilTesterList';
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { useAuthStore } from "./store/auth-store";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
+import CreateSoilTester from "./components/SoilTester/CreateSoilTester";
+import SoilTesterList from "./components/SoilTester/SoilTesterList";
+import ChangePassword from "./components/Auth/ChangwPassword";
+import SingleFarmer from "./components/SoilTester/SingleFarmer";
+import Analytics from "./pages/Analytics";
+import Profile from "./pages/Profile";
 
-const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   return isAuthenticated ? <>{children}</> : <Navigate to="/login" />;
 };
@@ -42,6 +53,42 @@ function App() {
             </PrivateRoute>
           }
         />
+        <Route
+          path="/setting/change-password"
+          element={
+            <PrivateRoute>
+              <ChangePassword />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/analytics"
+          element={
+            <PrivateRoute>
+              <Analytics />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <Profile />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/single/test-request/:id"
+          element={
+            <PrivateRoute>
+              <SingleFarmer />
+            </PrivateRoute>
+          }
+        />
+
         <Route path="/" element={<Navigate to="/login" />} />
       </Routes>
     </Router>

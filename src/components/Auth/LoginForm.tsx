@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 const loginSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(6),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
@@ -24,9 +24,22 @@ const LoginForm = () => {
   });
 
   const onSubmit = async (data: LoginFormData) => {
-    await login(data.email, data.password);
-    navigate('/dashboard');
+    try {
+      await login(data.email, data.password);
+      navigate('/dashboard'); // Redirect to the dashboard on successful login
+    } catch (err) {
+      if (err instanceof Error) {
+        console.error('Login error:', err.message); // Updated to use `err`
+        alert(err.message); // Updated to use `err`
+      } else {
+        console.error('Login error:', err);
+        alert('An unknown error occurred. Please try again.');
+      }
+    }
   };
+  
+  
+  
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

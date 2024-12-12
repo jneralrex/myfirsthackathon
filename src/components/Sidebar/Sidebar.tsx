@@ -10,6 +10,7 @@ import {
   LogOut,
   TestTube,
   Menu,
+  User,
   X
 } from 'lucide-react';
 import SidebarItem from './SidebarItem';
@@ -24,11 +25,12 @@ const Sidebar = () => {
   const menuItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
     { icon: TestTube, label: 'Soil Testers', path: '/soil-testers' },
-    { icon: BarChart2, label: 'Analytics', path: '/analytics' },
-    { icon: Trees, label: 'Fields', path: '/fields' },
-    { icon: Wheat, label: 'Harvesting', path: '/harvesting' },
-    { icon: Cloud, label: 'Weather', path: '/weather' },
-    { icon: Settings, label: 'Settings', path: '/settings' },
+    // { icon: BarChart2, label: 'Analytics', path: '/analytics' },
+    // { icon: Trees, label: 'Fields', path: '/fields' },
+    // { icon: Wheat, label: 'Harvesting', path: '/harvesting' },
+    // { icon: Cloud, label: 'Weather', path: '/weather' },
+    { icon: User , label: 'Profile', path: '/profile' },
+    { icon: Settings, label: 'Settings', path: '/setting/change-password' },
   ];
 
   const handleLogout = () => {
