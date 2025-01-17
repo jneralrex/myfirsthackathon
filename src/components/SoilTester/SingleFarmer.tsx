@@ -17,16 +17,16 @@ const SingleFarmer = () => {
   const [error, setError] = useState("");
   const [status, setStatus] = useState("");
   const [formData, setFormData] = useState({
-    nitrogen: "",
-    potassium: "",
-    iron: "",
-    manganese: "",
-    boron: "",
-    copper: "",
-    zinc: "",
-    cec: "",
-    organicMatter: "",
-    cn: "",
+    nitrogen: 0,
+    potassium: 0,
+    iron: 0,
+    manganese: 0,
+    boron: 0,
+    copper: 0,
+    zinc: 0,
+    cec: 0,
+    organicMatter: 0,
+    cn: 0,
     texture: "",
     source: "",
   });
@@ -126,7 +126,7 @@ const SingleFarmer = () => {
       );
       const res = await axios.post(
         `${base_url}/agent/request/${decodedId}/result`,
-        formData,
+        {result:formData},
         {
           headers: {
             Authorization: `Bearer ${storedUser.token}`,
@@ -254,7 +254,7 @@ const SingleFarmer = () => {
                 <label>
                   Nitrogen <br />
                   <input
-                    type="text"
+                    type="number"
                     name="nitrogen"
                     value={formData.nitrogen}
                     onChange={handleChange}
@@ -265,7 +265,7 @@ const SingleFarmer = () => {
                 <label>
                   Potassium <br />
                   <input
-                    type="text"
+                    type="number"
                     name="potassium"
                     value={formData.potassium}
                     onChange={handleChange}
@@ -276,7 +276,7 @@ const SingleFarmer = () => {
                 <label>
                   Iron <br />
                   <input
-                    type="text"
+                    type="number"
                     name="iron"
                     value={formData.iron}
                     onChange={handleChange}
@@ -287,7 +287,7 @@ const SingleFarmer = () => {
                 <label>
                   Manganese <br />
                   <input
-                    type="text"
+                    type="number"
                     name="manganese"
                     value={formData.manganese}
                     onChange={handleChange}
@@ -298,7 +298,7 @@ const SingleFarmer = () => {
                 <label>
                   Boron <br />
                   <input
-                    type="text"
+                    type="number"
                     name="boron"
                     value={formData.boron}
                     onChange={handleChange}
@@ -309,7 +309,7 @@ const SingleFarmer = () => {
                 <label>
                   Copper <br />
                   <input
-                    type="text"
+                    type="number"
                     name="copper"
                     value={formData.copper}
                     onChange={handleChange}
@@ -320,7 +320,7 @@ const SingleFarmer = () => {
                 <label>
                   Zinc <br />
                   <input
-                    type="text"
+                    type="number"
                     name="zinc"
                     value={formData.zinc}
                     onChange={handleChange}
@@ -331,7 +331,7 @@ const SingleFarmer = () => {
                 <label>
                   CEC <br />
                   <input
-                    type="text"
+                    type="number"
                     name="cec"
                     value={formData.cec}
                     onChange={handleChange}
@@ -342,7 +342,7 @@ const SingleFarmer = () => {
                 <label>
                   Organic Matter <br />
                   <input
-                    type="text"
+                    type="number"
                     name="organicMatter"
                     value={formData.organicMatter}
                     onChange={handleChange}
